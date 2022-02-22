@@ -1,75 +1,34 @@
 numbers = list(input().split(','))
-higher_number = 1000
+higher_number = len(numbers)
+# 1, 2, 3
 naturals = []
+# 1, -1, 2, 0.0, 1/1, 2/1
 integers = []
+# 1/2, 2.1
 rationals = []
+# pi, sqrt(2)
 reals = []
+# sqrt(-1)
 complexes = []
 evens = []
 odds = []
 primes = []
 
 
-def is_natural(number):
-    for i in range(1, higher_number):
-        if number == i:
-            naturals.append(number)
-            break
-
-
-def is_integer(number):
-    a = isinstance(number, int)
-    if a:
-        integers.append(number)
-
-
-def is_rational(number):
-    if str(number).__contains__('.') or str(number).__contains__('/'):
-        rationals.append(number)
-
-
-def is_real(number):
-    if not str(number).__contains__('i'):
-        reals.append(number)
-
-
-def is_complex(number):
-    if str(number).__contains__('i'):
-        complexes.append(number)
-
-
 def is_even(number):
-    try:
+    if str(number).isnumeric():
         number = int(number)
         if number % 2 == 0:
             evens.append(number)
             return
-    except ValueError:
-        pass
-    try:
-        number = float(number)
-        if number % 2 == 0:
-            evens.append(number)
-            return
-    except ValueError:
-        pass
 
 
 def is_odd(number):
-    try:
+    if str(number).isnumeric():
         number = int(number)
         if number % 2 == 1:
             odds.append(number)
             return
-    except ValueError:
-        pass
-    try:
-        number = float(number)
-        if number % 2 == 1:
-            odds.append(number)
-            return
-    except ValueError:
-        pass
 
 
 def is_prime(number):
@@ -85,25 +44,58 @@ def is_prime(number):
         pass
 
 
+def get_number(number):
+    if number[0] == '-':
+        number = number[1:]
+    if str(number).isnumeric():
+        return int(number)
+    elif str(number).__contains__('.'):
+        index = str(number).find('.')
+        if len(number) - 1 == index:
+            return int(number[:index])
+        else:
+            n = number[index + 1:]
+            for char_after_point in n:
+                if char_after_point != '0':
+                    return number
+            number = float(number)
+            return int(number)
+    elif str(num).__contains__('/'):
+        index = str(number).find('/')
+        left = number[:index]
+        right = number[index + 1:]
+        if left == right or int(left) % int(right) == 0:
+            return 1
+        else:
+            return number
+
+
 for num in numbers:
-    try:
-        num = int(num)
-    except ValueError:
-        pass
-    is_natural(num)
-    is_integer(num)
-    is_rational(num)
-    is_real(num)
-    is_complex(num)
+    complexes.append(num)
+
+    if not str(num).__contains__('j'):
+        reals.append(num)
+
+    if str(num).__contains__('.') or str(num).__contains__('/'):
+        rationals.append(num)
+
+    a = get_number(num)
+    if type(a) is int:
+        integers.append(num)
+
+    for i in range(1, higher_number):
+        if num == str(i):
+            naturals.append(num)
+
     is_even(num)
     is_odd(num)
     is_prime(num)
 
-print(naturals)
-print(integers)
-print(rationals)
-print(reals)
-print(complexes)
-print(evens)
-print(odds)
-print(primes)
+print("Naturals: " + str(naturals))
+print("Integers: " + str(integers))
+print("Rationals: " + str(rationals))
+print("Reals: " + str(reals))
+print("Complexes: " + str(complexes))
+print("Evens: " + str(evens))
+print("Odds: " + str(odds))
+print("Primes: " + str(primes))
