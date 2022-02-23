@@ -32,16 +32,14 @@ def is_odd(number):
 
 
 def is_prime(number):
-    try:
-        number = int(number)
+    if number in integers and not str(number).__contains__('/'):
+        number = int(float(number))
         if number > 1:
             for el in range(2, number):
                 if (number % el) == 0:
                     break
             else:
                 primes.append(number)
-    except ValueError:
-        pass
 
 
 def get_number(number):
