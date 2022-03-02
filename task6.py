@@ -53,37 +53,38 @@ def print_matrix(m):
         print()
 
 
-rows = int(input("Enter number of rows: "))
-columns = int(input("Enter number of columns: "))
+if __name__ == "__main__":
+    rows = int(input("Enter number of rows: "))
+    columns = int(input("Enter number of columns: "))
 
-matrix = []
-print("Enter entries line by line:")
+    matrix = []
+    print("Enter entries line by line:")
 
-for i in range(rows):
-    entries_in_a_row = []
-    for j in range(columns):
-        entries_in_a_row.append(int(input()))
-    matrix.append(entries_in_a_row)
+    for i in range(rows):
+        entries_in_a_row = []
+        for j in range(columns):
+            entries_in_a_row.append(int(input()))
+        matrix.append(entries_in_a_row)
 
-while True:
-    print("""
+    while True:
+        print("""
 Type a number of option:
 1. Square matrix.
 2. Transpose matrix.
 3. Find determinant.
 4. Print original matrix.
 0. Exit.""")
-    option = input()
-    if option == "1":
-        square_matrix()
-    elif option == "2":
-        transpose_matrix()
-    elif option == "3":
-        print("Determinant: " + str(find_determinant(matrix, 1)))
-    elif option == "4":
-        print("Original matrix:")
-        print_matrix(matrix)
-    elif option == "0":
-        exit(0)
-    else:
-        print("Enter a number 1, 2 or 3.")
+        option = input()
+        if option == "1":
+            square_matrix()
+        elif option == "2":
+            transpose_matrix()
+        elif option == "3":
+            print("Determinant: " + str(find_determinant(matrix, 1)))
+        elif option == "4":
+            print("Original matrix:")
+            print_matrix(matrix)
+        elif option == "0":
+            exit(0)
+        else:
+            print("Enter a number 1, 2 or 3.")
