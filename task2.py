@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 
 def reverse(arr: list):
@@ -16,6 +17,34 @@ def reverse(arr: list):
             x1, y1 = i, arr[i]
             count += 1
 
+
+def recover_by_correlation(row, data_values):
+    deleted_value = []
+    for i in range(len(row[0])):
+        if row[0][i] is None:
+            deleted_value.append(i)
+    for i in range(len(row[1])):
+        for j in deleted_value:
+            if data_values[row[1][i][0][j]] is not None:
+                row[0][j] = data_values[row[1][i][0][j]]
+                deleted_value.remove(j)
+
+
+def correlation(list_of_v: list):
+    data_values = []
+    while len(list_of_v) > 0:
+        # создаем лист даты, чтобы хранить в нем ряд и коэффы наиб корр.рядов
+        data_values.append([list_of_v.pop(), []])
+
+    for i in range(len(data_values)):
+        for j in range(len(data_values)):
+            if i != j:
+                data_values[i][1].append([np.corrcoef(np.array(data_values[i][0]).min(), np.array(data_values[j][0])), j])
+        data_values[i][1].sort()
+
+    for value in data_values:
+        recover_by_correlation(value, data_values)
+    return data_values
 
 def approximation(array: list):
     saved_coord = list()
@@ -69,5 +98,5 @@ if __name__ == '__main__':
         if a[i][j] is not None:
             a[i][j] = None
             count += 1
-
-    print(approximation(a))
+    print(correlation(a))
+    # print(approximation(a))
