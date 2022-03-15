@@ -46,6 +46,7 @@ def correlation(list_of_v: list):
         recover_by_correlation(value, data_values)
     return data_values
 
+
 def approximation(array: list):
     saved_coord = list()
     x1, y1 = 0, 0
@@ -86,7 +87,9 @@ def approximation(array: list):
 
 
 if __name__ == '__main__':
-    n = int(input())
+    n = 0
+    while n <= 3:
+        n = int(input("Enter number more than 3: "))
     a = [[0] * n for i in range(n)]
     for i in range(n):
         for j in range(n):
@@ -98,5 +101,5 @@ if __name__ == '__main__':
         if a[i][j] is not None:
             a[i][j] = None
             count += 1
-    print(correlation(a))
-    # print(approximation(a))
+    # print(correlation(a))
+    print(approximation(a))
