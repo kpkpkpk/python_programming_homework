@@ -5,6 +5,7 @@ number_of_fields = 4  # номер периода, цена, изменение,
 number_of_periods = 8  # количество периодов
 data = []
 period_price_dif_cap = [[i] * number_of_fields for i in range(n * number_of_periods)]
+number_of_stocks_and_last_price = []
 
 
 def read_csv_and_fill_data():
@@ -40,6 +41,27 @@ def read_csv_and_fill_data():
                     data.append(pair)
 
 
+def reverse():
+    import csv
+
+    with open("buffer.csv", encoding='utf8') as fr, open("YNDX.csv", "w", encoding='utf8') as fw:
+        cr = csv.reader(fr, delimiter=";")
+        cw = csv.writer(fw, delimiter=";")
+        cw.writerow(next(cr))  # write title as-is
+        cw.writerows(reversed(list(cr)))
+
+
+def count_evgen_part():
+    for i_period in range(number_of_periods):
+        sum_cap = 0
+        for i_comp in range(n):
+            data_for_period = list(data[i_comp].values())[0][i_period]
+            sum_cap += data_for_period[3]
+        print(f'{round(sum_cap, 2)} - summary capitalization in {i_period} period')
+
+
 if __name__ == '__main__':
+    # reverse()
     read_csv_and_fill_data()
     print(data)
+    count_evgen_part()
