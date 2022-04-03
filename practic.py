@@ -13,7 +13,7 @@ def prepare_data():
 
 new = prepare_data()
 
-
+# Винзорирование + метод со скользящим окном наблюдения
 def sglazh(arr):
     new_arr = [[arr[0], arr[1]]]
     a = 2
