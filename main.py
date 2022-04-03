@@ -1,13 +1,91 @@
 import math
 
 total_money = 10_000_000
-money_for_one = 3_333_333
+money_for_one = total_money // 3
 n = 21
-number_of_fields = 5  # номер периода, цена средняя, цена последняя (для закупки и продажи), изменение, капиталзация
+number_of_fields = 5  # номер периода, цена средняя, цена последняя (для закупки и продажи), изменение, капитализация
 number_of_periods = 8  # количество периодов
 data = []  # основное хранилище
 period_priceavg_pricelast_dif_cap = [[i] * number_of_fields for i in range(n * number_of_periods)]
 number_of_stocks_and_last_price = []
+
+
+# Метод винзорирования
+def vins(data_with_losses):
+    data_fully = data_with_losses.copy()
+    prev_el = None
+    next_el = None
+    for i in range(len(data_fully)):
+        if data_fully[i] is None:
+            if i == 0:
+                j = i
+                while j < len(data_fully):
+                    if data_fully[j] is not None:
+                        next_el = data_fully[j]
+                        break
+                    j += 1
+            data_fully[i] = prev_el or next_el
+        else:
+            prev_el = data_fully[i]
+    return data_fully
+
+
+# Метод линейной апроксимации
+def lin_apr(data_with_losses):
+    data_fully = data_with_losses.copy()
+    prev_el = None
+    next_el = None
+    k = 0
+    for i in range(len(data_fully)):
+        if data_fully[i] is None:
+            if i == 0:
+                j = i
+                while j < len(data_fully):
+                    if data_fully[j] is not None:
+                        next_el = data_fully[j]
+                        break
+                    j += 1
+                data_fully[i] = prev_el or next_el
+                k = 0
+                continue
+            else:
+                j = i
+                while j < len(data_fully):
+                    if data_fully[j] is not None:
+                        next_el = data_fully[j]
+                        break
+                    j += 1
+                    k += 1
+                else:
+                    data_fully[i] = prev_el
+                    continue
+                step = (max(prev_el, next_el) - min(prev_el, next_el)) / (k + 1)
+                index = 1
+                while index < k + 1:
+                    data_fully[i] = prev_el + index * step
+                    index += 1
+                    i += 1
+                k = 0
+                next_el = 0
+                prev_el = 0
+        else:
+            prev_el = data_fully[i]
+    return data_fully
+
+
+# Метод корреляционного восстановления
+def correlation_recovery():
+    pass
+
+
+# Метод взвешенного скользящего среднего
+def weighted_moving_average():
+    pass
+
+
+# Метод скользящего среднего со скользящим окном наблюдения
+def moving_average_with_moving_observation_window():
+    pass
 
 
 def read_csv_and_fill_data():
@@ -98,16 +176,17 @@ def anatoliy_task(list_of_company, s):
                 if len(pair) < 3:
                     pair.append([k, i, j])
                 else:
-                    max = 0
+                    max_ = 0
                     for index in range(len(pair)):
-                        if pair[index][0] > pair[max][0]: max = index
-                    pair[max] = [k, i, j]
+                        if pair[index][0] > pair[max_][0]:
+                            max_ = index
+                    pair[max_] = [k, i, j]
 
     packs = []
     s /= 6
     for i in pair:
-        packs.append([list_of_company[i[1]][0], (s) // list_of_company[i[1]][-1][-1]])
-        packs.append([list_of_company[i[2]][0], (s) // list_of_company[i[2]][-1][-1]])
+        packs.append([list_of_company[i[1]][0], s // list_of_company[i[1]][-1][-1]])
+        packs.append([list_of_company[i[2]][0], s // list_of_company[i[2]][-1][-1]])
     return packs
 
 
@@ -138,8 +217,10 @@ def andrei_task(list_of_company, s):
 
 
 if __name__ == '__main__':
-    # reverse()
-
+    #  Можно использовать PyQt, Kivy, Tkinter, JPython - самое легкое и распространенное
+    #  Временные периоды по полугоду: от 2017-01-01 до 2019-07-01, например (от ... до проще всего сделать)
     read_csv_and_fill_data()
     print(data)
-    count_evgen_part()
+    # count_evgen_part()
+    # print(vins([None, 1, 2, None, 20, 3, None]))
+    # print(lin_apr([None, 1, 2, None, None, 5, 3, None]))
