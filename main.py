@@ -74,8 +74,31 @@ def lin_apr(data_with_losses):
 
 
 # Метод корреляционного восстановления
-def correlation_recovery():
-    pass
+def correlation_recovery(values1, values2):
+    for i in range(len(values1)):
+        if values1[i] is None:
+            if i == len(values1) - 1:
+                p1 = values1[i - 1]
+                v1 = values2[i - 1]
+                v2 = values2[i]
+                values1[i] = p1 * v1 / v2
+            else:
+                p2 = values1[i + 1]
+                v1 = values2[i]
+                v2 = values2[i + 1]
+                values1[i] = p2 * v2 / v1
+        elif values2[i] is None:
+            if i == len(values2) - 1:
+                p1 = values1[i - 1]
+                p2 = values1[i]
+                v1 = values2[i - 1]
+                values2[i] = p1 * v1 / p2
+            else:
+                p1 = values1[i]
+                p2 = values1[i + 1]
+                v2 = values2[i + 1]
+                values2[i] = p2 * v2 / p1
+    return values1, values2
 
 
 # Метод взвешенного скользящего среднего
@@ -222,5 +245,14 @@ if __name__ == '__main__':
     read_csv_and_fill_data()
     print(data)
     # count_evgen_part()
+
+    # Примеры, чтобы ты знал, как вызывать - можно удалить
     # print(vins([None, 1, 2, None, 20, 3, None]))
     # print(lin_apr([None, 1, 2, None, None, 5, 3, None]))
+    # print(correlation_recovery([None, 1, 2, 4, None], [16, 8, None, 2, 1]))
+    # print(correlation_recovery([None, 1, None, 4, 8], [16, 8, 4, 2, None]))
+    # print("0.5, 1, 2, 4, 8 - 16, 8, 4, 2, 1")  # Что должно вывести
+    # print(correlation_recovery([16, 8, 4, 2, None], [None, 1, None, 4, 8]))
+    # print("16, 8, 4, 2, 1 - 0.5, 1, 2, 4, 8")  # Что должно вывести
+    # print(correlation_recovery([1, 2, 4, None, 0.5, 8], [None, 1, 0.5, 1, 4, None]))
+    # print("1, 2, 4, 2, 0.5, 8 - 2, 1, 0.5, 1, 4, 0.25")  # Что должно вывести
