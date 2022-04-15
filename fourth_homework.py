@@ -16,7 +16,7 @@ tikers = ["Введите свой тикер или выберите из сп�
 
 type_of_recovery = ["Винзорирование", "Линейная аппроксимация", "Ничего не выбрано"]
 
-smothing = ["Взвешенный метод скользящего среднего", "метод скользящего среднего со скользящим окном наблюдения",
+smoothing = ["Взвешенный метод скользящего среднего", "метод скользящего среднего со скользящим окном наблюдения",
             "ничего не выбрано"]
 
 
@@ -141,13 +141,13 @@ def smoothing_2(data, k, n):
 
 
 def on_click():
-    global if_graf
+    global flag_graph
     global conv
     figure2 = plt.Figure(figsize=(10, 8), dpi=120)
     ax2 = figure2.add_subplot(111)
-    if if_graf:
+    if flag_graph:
         conv.get_tk_widget().destroy()
-        if_graf = False
+        flag_graph = False
     company = combo.get()
     n = nnn.get()
     k = kkk.get()
@@ -157,7 +157,7 @@ def on_click():
         k = int(k)
     start_time = time_start.get()
     finish_time = time_finish.get()
-    smoth = combo2.get()
+    smooth = combo2.get()
     recover = combo1.get()
     lbl.configure(text="")
     lbl4.configure(text="")
@@ -166,9 +166,9 @@ def on_click():
         data = recovering_1(data)
     elif recover == type_of_recovery[1]:
         data = recovering_2(data)
-    if smoth != smothing[2]:
+    if smooth != smoothing[2]:
         if 0 <= n <= 1:
-            if smoth == smothing[0]:
+            if smooth == smoothing[0]:
                 data = smoothing_2(data, k, n)
             else:
                 data = smoothing_1(data, n)
@@ -180,7 +180,7 @@ def on_click():
     df2 = df2[['year', 'action']].groupby('year').sum()
     df2.plot(kind='line', legend=True, ax=ax2, color='r', fontsize=10)
     ax2.set_title('Graph')
-    if_graf = True
+    flag_graph = True
 
 
 # Build UI
@@ -189,7 +189,7 @@ file = open("actions", "w")
 file.close()
 window = Tk()
 conv = None
-if_graf = False
+flag_graph = False
 
 str1 = Frame(window)
 str2 = Frame(window)
@@ -222,7 +222,7 @@ combo1['values'] = type_of_recovery
 combo1.current(1)
 combo1.grid(column=1, row=1)
 combo2 = Combobox(str1)
-combo2['values'] = smothing
+combo2['values'] = smoothing
 combo2.current(1)
 combo2.grid(column=1, row=2)
 lbl1 = Label(str1, text="Выберите способ восстановления данных")
