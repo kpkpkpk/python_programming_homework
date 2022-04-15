@@ -12,7 +12,7 @@ import math
 
 tikers = ["Введите свой тикер или выберите из списка", "YNDX.ME", "ALRS", "POLY", "YNDX", "MSFT", "AAPL", "GAZP.ME",
           "SBER.me", "SNGS.me", "RT-KM.me", "PICK.me",
-          "DSKY.me", "ONE", "DFK", "DRI", "TSLA", "TTLK.ME", "LSRG.ME", "MSTT.ME" ]
+          "DSKY.me", "ONE", "DFK", "DRI", "TSLA", "TTLK.ME", "LSRG.ME", "MSTT.ME"]
 
 type_of_recovery = ["Винзорирование", "Линейная аппроксимация", "Ничего не выбрано"]
 
@@ -34,27 +34,6 @@ def close():
     global conv
     if conv:
         conv.get_tk_widget().destroy()
-
-
-def reformat_data_file(data):
-    start = data["year"][0].split("-")
-    finish = data["year"][-1].split("-")
-    start_date = dt.datetime(int(start[0]), int(start[1]), int(start[2]))
-    finish_date = dt.datetime(int(finish[0]), int(finish[1]), int(finish[2]))
-    res = pd.date_range(start_date, finish_date).strftime('%Y-%m-%d').tolist()
-    dates = []
-    actions = []
-    count = 0
-    for i in range(len(res)):
-        if res[i] not in data["year"]:
-            dates.append(res[i])
-            actions.append(None)
-        else:
-            dates.append(res[i])
-            actions.append(data["action"][data["year"].index(res[i])])
-        count += 1
-    data2 = {"year": dates, "action": actions}
-    return data2
 
 
 def recovering_1(data):
@@ -161,7 +140,7 @@ def smoothing_2(data, k, n):
     return data
 
 
-def clicked():
+def on_click():
     global if_graf
     global conv
     figure2 = plt.Figure(figsize=(10, 8), dpi=120)
@@ -180,34 +159,28 @@ def clicked():
     finish_time = time_finish.get()
     smoth = combo2.get()
     recover = combo1.get()
-    if re.match(r"\d{4}-\d{2}-\d{2}", start_time) or re.match(r"\d{4}-\d{2}-\d{2}", finish_time):
-        lbl.configure(text="")
-        lbl4.configure(text="")
-        data = dowload_data(start_time, finish_time, company)
-        data = reformat_data_file(data)
-        if recover == type_of_recovery[0]:
-            data = recovering_1(data)
-        elif recover == type_of_recovery[1]:
-            data = recovering_2(data)
-        if smoth != smothing[2]:
-            if 0 <= n <= 1:
-                if smoth == smothing[0]:
-                    data = smoothing_2(data, k, n)
-                else:
-                    data = smoothing_1(data, n)
+    lbl.configure(text="")
+    lbl4.configure(text="")
+    data = dowload_data(start_time, finish_time, company)
+    if recover == type_of_recovery[0]:
+        data = recovering_1(data)
+    elif recover == type_of_recovery[1]:
+        data = recovering_2(data)
+    if smoth != smothing[2]:
+        if 0 <= n <= 1:
+            if smoth == smothing[0]:
+                data = smoothing_2(data, k, n)
             else:
-                lbl4.configure(text="коэфф должен быть в промежутке [0,1]")
-        conv = FigureCanvasTkAgg(figure2, str4)
-        conv.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-        df2 = DataFrame(data, columns=['year', 'action'])
-        df2 = df2[['year', 'action']].groupby('year').sum()
-        df2.plot(kind='line', legend=True, ax=ax2, color='r', fontsize=10)
-        ax2.set_title('Graph')
-        if_graf = True
-    else:
-        lbl.configure(text="введен неверный формат даты")
-        conv.get_tk_widget().destroy()
-        if_graf = False
+                data = smoothing_1(data, n)
+        else:
+            lbl4.configure(text="коэфф должен быть в промежутке [0,1]")
+    conv = FigureCanvasTkAgg(figure2, str4)
+    conv.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+    df2 = DataFrame(data, columns=['year', 'action'])
+    df2 = df2[['year', 'action']].groupby('year').sum()
+    df2.plot(kind='line', legend=True, ax=ax2, color='r', fontsize=10)
+    ax2.set_title('Graph')
+    if_graf = True
 
 
 # Build UI
@@ -238,7 +211,7 @@ time_start = Entry(str1, width=20)
 time_start.grid(column=1, row=3)
 time_finish = Entry(str1, width=20)
 time_finish.grid(column=2, row=3)
-btn = Button(master=str1, text="Build", command=clicked)
+btn = Button(master=str1, text="Build", command=on_click)
 btn.grid(column=2, row=5)
 combo = Combobox(str1)
 combo['values'] = tikers
