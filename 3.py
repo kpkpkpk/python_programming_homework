@@ -24,27 +24,28 @@ def create_rbs():
         row += 1
 
 
-regex = r"\d{4}-\d{2}-\d{2}-"
-for x in os.listdir():
-    if x.endswith(".pdf"):
-        files.append(x)
+if __name__ == '__main__':
+    regex = r"\d{4}-\d{2}-\d{2}-"
+    for x in os.listdir():
+        if x.endswith(".pdf"):
+            files.append(x)
 
-row = 0
-column = 0
+    row = 0
+    column = 0
 
-window = Tk()
-window.title('Last lab ;)')
-frame = Frame(master=window)
-label = Label(master=frame, text='Which PDF file you want to open?')
-label.grid(row=row, column=0)
-row += 1
+    window = Tk()
+    window.title('Last lab ;)')
+    frame = Frame(master=window)
+    label = Label(master=frame, text='Which PDF file you want to open?')
+    label.grid(row=row, column=0)
+    row += 1
 
-var = StringVar()
-create_rbs()
+    var = StringVar()
+    create_rbs()
 
-btn = Button(master=frame, text='Open', command=finish)
-btn.grid(row=row, column=0)
+    btn = Button(master=frame, text='Open', command=finish)
+    btn.grid(row=row, column=0)
 
-window.minsize(250, 100)
-frame.pack()
-window.mainloop()
+    window.minsize(250, 100)
+    frame.pack()
+    window.mainloop()
