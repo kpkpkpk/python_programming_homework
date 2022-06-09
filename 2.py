@@ -12,17 +12,25 @@ def alert(title, message, type_of_alert='info'):
 def finish(event):
     import pandas as pd
     import matplotlib.pyplot as plt
-    global e_time, e_speed, e_name
+    global e_time, e_speed, e_name, var
     flag = False
+    if var.get() == m_text:
+        s = 'Путь, м'
+        t = 'Время, с'
+        v = 'Скорость, м/с'
+    else:
+        s = 'Путь, км'
+        t = 'Время, ч'
+        v = 'Скорость, км/ч'
     try:
-        time_in_minutes = str(int(e_time.get()))
+        time = str(int(e_time.get()))
         speed = str(int(e_speed.get()))
-
-        cell_c1 = gsheet.acell('B1')
-        if str(cell_c1.value) != str(datetime.date.today()):
-            gsheet.update('B1', str(datetime.date.today()))
-        gsheet.update('B3', time_in_minutes)
+        gsheet.update('B1', str(datetime.date.today()))
+        gsheet.update('B3', time)
         gsheet.update('B4', speed)
+        gsheet.update('C2', s)
+        gsheet.update('C3', t)
+        gsheet.update('C4', v)
         alert('Success!', 'Data successfully updated!')
         flag = True
     except ValueError:
@@ -47,20 +55,30 @@ if __name__ == '__main__':
     window = Tk()
     window.title('Last lab ;)')
     frame = Frame(master=window)
-    label_time = Label(master=frame, text='Time in minutes:')
+    label_time = Label(master=frame, text='Time:')
     label_time.grid(row=0, column=0)
     e_time = Entry(master=frame)
     e_time.grid(row=0, column=1)
-    label_speed = Label(master=frame, text='Speed in meters per minutes:')
+    label_speed = Label(master=frame, text='Speed:')
     label_speed.grid(row=1, column=0)
     e_speed = Entry(master=frame)
     e_speed.grid(row=1, column=1)
+
+    var = StringVar()
+    m_text = 'Metres per minutes and minutes'
+    km_text = 'Kilometres per hours and hours'
+    rb_m = Radiobutton(master=frame, text=m_text, value=m_text, variable=var)
+    rb_m.grid(row=2, column=0)
+    rb_m.select()
+    rb_km = Radiobutton(master=frame, text=km_text, value=km_text, variable=var)
+    rb_km.grid(row=2, column=1)
+
     label_name = Label(master=frame, text='Name of PDF file:')
-    label_name.grid(row=2, column=0)
+    label_name.grid(row=3, column=0)
     e_name = Entry(master=frame)
-    e_name.grid(row=2, column=1)
+    e_name.grid(row=3, column=1)
     btn_confirm = Button(master=frame, text='Confirm')
-    btn_confirm.grid(row=3, column=0)
+    btn_confirm.grid(row=4, column=0)
     btn_confirm.bind('<Button-1>', finish)
 
     frame.pack()
